@@ -1,0 +1,23 @@
+<div class="p-1">
+  <mat-card class="p-0">
+    <div
+      fxLayout="row wrap"
+      fxLayoutAlign="space-between center"
+      class="w-100 p-2"
+    >
+      <h2>Employee List</h2>
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="['/maintenance/employee-create']"
+      >
+        <mat-icon>add</mat-icon>
+        Add Employee
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="container">
+      <app-table-employee></app-table-employee>
+    </div>
+  </mat-card>
+</div>

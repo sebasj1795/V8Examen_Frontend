@@ -1,0 +1,39 @@
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  
+    .container {
+      display: flex;
+      border-radius: 17px;
+      box-shadow: 0px 4px 14px 3px rgb(0 0 0 / 52%);
+      height: 26rem;
+      background: white;
+      z-index: 1;
+      &__img {
+        display: flex;
+        align-items: center;
+        background: #f2f3f4;
+        border-bottom-left-radius: inherit;
+        border-top-left-radius: inherit;
+  
+        img {
+          max-width: 28rem;
+        }
+      }
+  
+      &__form {
+        padding: 1em;
+        display: flex;
+        align-items: center;
+        border-bottom-right-radius: inherit;
+        border-top-right-radius: inherit;
+        .login-form {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+  }
+  

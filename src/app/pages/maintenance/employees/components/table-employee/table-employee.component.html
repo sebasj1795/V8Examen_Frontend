@@ -1,0 +1,264 @@
+<mat-card class="p-0" [ngClass]="{'hidden_custom': hasFilter === false}">
+  <div
+    fxLayout="row wrap"
+    fxLayoutAlign="space-between center"
+    class="w-100 p-2"
+  ></div>
+
+  <div class="container">
+    <div fxFlex="100" fxFlex.gt-sm="100" class="px-1">
+      <div fxFlex="100" fxFlex.gt-sm="15" class="px-1">
+        <input #txtidemployeeref type="text" hidden />
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Empleado referencia</mat-label>
+          <input #txtnameemployeeref matInput disabled />
+        </mat-form-field>
+      </div>
+      <div fxFlex="100" fxFlex.gt-sm="85" class="px-1">
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+          <mat-button-toggle value="1" (click)="btnFilter(1)"
+            >Misma oficina y grado</mat-button-toggle
+          >
+          <mat-button-toggle value="2" (click)="btnFilter(2)"
+            >Todas oficinas mismo grado</mat-button-toggle
+          >
+          <mat-button-toggle value="3" (click)="btnFilter(3)">
+            Misma Posición y grado</mat-button-toggle
+          >
+          <mat-button-toggle value="4" (click)="btnFilter(4)">
+            Todas posiciones mismo grado</mat-button-toggle
+          >
+          <mat-button-toggle
+            style="background-color: #ff5252;"
+            (click)="removeFilter()"
+          >
+            Quitar</mat-button-toggle
+          >
+        </mat-button-toggle-group>
+      </div>
+    </div>
+  </div>
+</mat-card>
+<mat-divider></mat-divider>
+
+<p-table
+  #dt
+  [value]="listEmployees"
+  class="st-datatable table-consultant-main color-row-odd1"
+  dataKey="id"
+  responsiveLayout="scroll"
+  [rowsPerPageOptions]="[5,10,25,50]"
+  [paginator]="true"
+  [totalRecords]="totalRecords"
+  [rows]="5"
+  [autoLayout]="true"
+  [globalFilterFields]="['name','country.name','representative.name','status']"
+  [resizableColumns]="true"
+  [lazy]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [showCurrentPageReport]="true"
+  (onLazyLoad)="loadLazy($event)"
+  [loading]="loadingGrid"
+  styleClass="p-datatable-sm"
+>
+  <ng-template pTemplate="colgroup">
+    <colgroup>
+      <col style="width: 20px;" />
+      <col style="width: 100px;" />
+      <col style="width: 90px;" />
+      <col style="width: 120px;" />
+      <col style="width: 200px;" />
+      <col style="width: 90px;" />
+      <col style="width: 260px;" />
+    </colgroup>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="code">
+        <span>Code</span>
+        <p-sortIcon field="code"></p-sortIcon>
+      </th>
+      <th pSortableColumn="nameComplete" class="">
+        <span>Names</span>
+        <p-sortIcon field="nameComplete"></p-sortIcon>
+      </th>
+      <th pSortableColumn="division">
+        <span>Division</span>
+        <p-sortIcon field="division"></p-sortIcon>
+      </th>
+      <th pSortableColumn="grade">
+        <span>Grade</span>
+        <p-sortIcon field="grade"></p-sortIcon>
+      </th>
+      <th pSortableColumn="beginDate" class="">
+        <span>Begin Date</span>
+        <p-sortIcon field="beginDate"></p-sortIcon>
+      </th>
+      <th pSortableColumn="birthday" class="">
+        <span>Birthday</span>
+        <p-sortIcon field="birthday"></p-sortIcon>
+      </th>
+      <th pSortableColumn="identification" class="">
+        <span>Identification</span>
+        <p-sortIcon field="identification"></p-sortIcon>
+      </th>
+      <th pSortableColumn="totalSalary" class="">
+        <span>Total Salary</span>
+        <p-sortIcon field="totalSalary"></p-sortIcon>
+      </th>
+      <th>Actions</th>
+    </tr>
+    <tr>
+      <th>
+        <input
+          pInputText
+          #inputCode
+          (input)="dt.filter(inputCode.value, 'code', 'contains')"
+          type="text"
+          class="p-column-filter p-inputtext-sm"
+          style="min-width: 40px;"
+          maxlength="30"
+        />
+      </th>
+      <th>
+        <input
+          pInputText
+          #inputNameComplete
+          (input)="dt.filter(inputNameComplete.value, 'nameComplete', 'contains')"
+          type="text"
+          class="p-column-filter p-inputtext-sm"
+          maxlength="30"
+        />
+      </th>
+      <th>
+        <p-columnFilter
+          field="division"
+          matchMode="equals"
+          [showMenu]="false"
+          [showClearButton]="false"
+        >
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-dropdown
+              optionValue="code"
+              appendTo="body"
+              optionLabel="description"
+              [options]="listDivisions"
+              (onChange)="filter($event.value)"
+              placeholder="All"
+              [showClear]="true"
+            >
+              <ng-template let-option pTemplate="item">
+                <span [class]="'customer-badge status-' + option.code"
+                  >{{option.description}}</span
+                >
+              </ng-template>
+            </p-dropdown>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+      <th>
+        <input
+          pInputText
+          #inputGrade
+          (input)="dt.filter(inputGrade.value, 'grade', 'contains')"
+          type="text"
+          class="p-column-filter p-inputtext-sm"
+          maxlength="30"
+        />
+      </th>
+      <th>
+        <p-columnFilter type="date" field="beginDate" [showClearButton]="false">
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-calendar
+              appendTo="body"
+              dateFormat="dd/mm/yy"
+              (onSelect)="filter($event)"
+              [readonlyInput]="true"
+              [showButtonBar]="true"
+              (onClearClick)="onClearDate('beginDate')"
+            >
+            </p-calendar>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="date" field="birthday" [showClearButton]="false">
+          <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+            <p-calendar
+              appendTo="body"
+              dateFormat="dd/mm/yy"
+              (onSelect)="filter($event)"
+              [readonlyInput]="true"
+              [showButtonBar]="true"
+              (onClearClick)="onClearDate('birthday')"
+            >
+            </p-calendar>
+          </ng-template>
+        </p-columnFilter>
+      </th>
+      <th>
+        <input
+          pInputText
+          #inputIdentification
+          (input)="dt.filter(inputIdentification.value, 'identification', 'contains')"
+          type="text"
+          class="p-column-filter p-inputtext-sm"
+          maxlength="30"
+        />
+      </th>
+      <th>
+        <input
+          pInputText
+          #inputTotalSalary
+          (input)="dt.filter(inputTotalSalary.value, 'totalSalary', 'contains')"
+          type="number "
+          class="p-column-filter p-inputtext-sm"
+          maxlength="30"
+        />
+      </th>
+      <th></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-employee>
+    <tr>
+      <td>{{employee.code}}</td>
+      <td>{{employee.nameComplete}}</td>
+      <td>{{employee.division}}</td>
+      <td>{{employee.grade}}</td>
+      <td>{{employee.beginDate | date: 'dd/MM/yyyy' }}</td>
+      <td>{{employee.birthday | date: 'dd/MM/yyyy' }}</td>
+      <td>{{employee.identification}}</td>
+      <td>{{employee.totalSalary | number : '1.2-2'}}</td>
+      <td>
+        <button
+          mat-mini-fab
+          color="primary"
+          matTooltip="Edit"
+          (click)="redirectEdit(employee)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <!-- <button mat-mini-fab color="warn" matTooltip="View Salary">
+          <mat-icon>monetization_on</mat-icon>
+        </button> -->
+        <button
+          *ngIf="!hasFilter"
+          mat-mini-fab
+          color="primary"
+          matTooltip="Select reference filter"
+          (click)="selecteEmployeeReference(employee)"
+        >
+          <mat-icon>filter_list</mat-icon>
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8" style="text-align: center;">
+        <span>data not found.</span>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "code": "code",
+    "nameComplete": "Joel Sebastian",
+    "division": "division",
+    "Grade": "grade",
+    "beginDate": "",
+    "birthday": "",
+    "identification": "101020",
+    "baseSalary": "0.00",
+    "commission": "0.00",
+    "compensationBonus": "0.00",
+    "productionBonus": "0.00",
+    "otherIncome": "0.00",
+    "contributions": "0.00",
+    "totalSalary": "0.00"
+  }
+]

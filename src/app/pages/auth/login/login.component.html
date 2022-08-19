@@ -1,0 +1,41 @@
+<div class="login-page">
+	<div class="container">
+		<div class="container__img">
+			<img src="assets/svg/login.svg" alt="MitoCode" />
+		</div>
+		<div class="container__form">
+			<form
+				class="login-form"
+				[formGroup]="loginFlowService.formGroup"
+				(ngSubmit)="onSubmit()"
+				*ngIf="loginFlowService.showLoader === false"
+			>
+				<mat-form-field appearance="outline">
+					<mat-label>Usuario</mat-label>
+					<input autocomplete="off" matInput placeholder="ejemplo@gmail.com" name="email" formControlName="username" />
+					<mat-icon matSuffix>account_circle</mat-icon>
+					<mat-error *ngIf="loginFlowService.userNameField.hasError('required')"> El usuario es requerido </mat-error>
+				</mat-form-field>
+
+				<mat-form-field appearance="outline">
+					<mat-label>Contraseña</mat-label>
+					<input matInput placeholder="Contraseña" name="password" formControlName="password" type="password" />
+					<mat-icon matSuffix>password</mat-icon>
+					<mat-error *ngIf="loginFlowService.passwordField.hasError('required')">Igrese su contraseña </mat-error>
+				</mat-form-field>
+
+				<button
+					mat-raised-button
+					color="primary"
+					class="login-button"
+					type="submit"
+					[disabled]="loginFlowService.formGroup.invalid"
+				>
+					Iniciar Sesión
+				</button>
+				<button mat-button color="warn" [routerLink]="['/register']" type="button">Crear Usuario</button>
+			</form>
+			<app-loader-principal *ngIf="loginFlowService.showLoader === true"></app-loader-principal>
+		</div>
+	</div>
+</div>
